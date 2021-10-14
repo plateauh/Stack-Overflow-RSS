@@ -1,5 +1,7 @@
 package com.najed.stackoverflowrss
 
+import androidx.core.text.htmlEncode
+import androidx.core.text.parseAsHtml
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.InputStream
@@ -35,7 +37,7 @@ class XMLParser {
 
     private fun startTag(parser: XmlPullParser, tagName: String){
         if (tagName.equals("category", true)){
-            questionCategories += parser.getAttributeValue(1)
+            questionCategories += "${parser.getAttributeValue(1)}, "
         }
     }
 
@@ -51,6 +53,7 @@ class XMLParser {
                 questionDetails = text.toString()
             }
             tagName.equals("entry", true) -> {
+                questionCategories = questionCategories.removeSuffix(", ")
                 qustions.add(Question(questionTitle, questionAuthor, questionCategories, questionDetails))
                 questionCategories = ""
             }
